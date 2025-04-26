@@ -10,9 +10,12 @@ Requires MelonLoader v0.5+
   ✨ Powered by <a href="https://github.com/yukieiji/UniverseLib">UniverseLib</a><br>
   🛠️ This is fork of <a href="https://github.com/kafeijao/MelonPreferencesManager">MelonPreferencesManager</a> maintained by tschrock<br>
 </p>
-# Releases  [![](https://img.shields.io/github/downloads/sinai-dev/MelonPreferencesManager/total.svg)](../../releases)
 
-[![](https://img.shields.io/github/release/tschrock/MelonPreferencesManager.svg?label=version)](../../releases/latest) [![](https://img.shields.io/github/workflow/status/tschrock/MelonPreferencesManager/Build%20MelonPreferencesManager)](https://github.com/tschrock/MelonPreferencesManager/actions) [![](https://img.shields.io/github/downloads/tschrock/MelonPreferencesManager/latest/total.svg)](../../releases/latest)
+# Releases  [![](https://img.shields.io/github/downloads/tschrock/MelonPreferencesManager/total.svg)](../../releases)
+
+[![](https://img.shields.io/github/release/tschrock/MelonPreferencesManager.svg?label=version)](../../releases/latest)
+[![](https://img.shields.io/github/actions/workflow/status/tschrock/MelonPreferencesManager/build.yml?branch=main)](https://github.com/tschrock/MelonPreferencesManager/actions)
+[![](https://img.shields.io/github/downloads/tschrock/MelonPreferencesManager/latest/total.svg)](../../releases/latest)
 
 
 ## How to use
