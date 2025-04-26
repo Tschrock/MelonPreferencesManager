@@ -36,7 +36,7 @@ namespace MelonPrefManager.UI
 
             EnsureConfigValid();
 
-            config.OnValueChangedUntyped += () => { UpdateValue(); };
+            config.OnEntryValueChangedUntyped.Subscribe((object oldValue, object newValue) => { UpdateValue(); });
 
             CreateIValue(config.BoxedValue, FallbackType);
         }

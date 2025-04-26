@@ -1,95 +1,220 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net35</TargetFramework>
         <OutputType>Library</OutputType>
-        <RootNamespace>MelonPrefManager</RootNamespace>
-        <LangVersion>10.0</LangVersion>
+        <PlatformTarget>AnyCPU</PlatformTarget>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <PlatformTarget>x64</PlatformTarget>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-        <AllowedReferenceRelatedFileExtensions></AllowedReferenceRelatedFileExtensions>
-        <Configurations>Release_Mono;Release_IL2CPP</Configurations>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <AllowedReferenceRelatedFileExtensions>none</AllowedReferenceRelatedFileExtensions>
+        <DebugSymbols>false</DebugSymbols>
+        <LangVersion>latest</LangVersion>
+        <WarningLevel>8</WarningLevel>
+        <RootNamespace>MelonPrefManager</RootNamespace>
+        <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+        <Optimize>true</Optimize>
+        <Configurations>ML_Cpp_net6;ML_Cpp_CoreCLR;ML_Cpp_net472;ML_Mono</Configurations>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release_IL2CPP' ">
-        <OutputPath>..\Release\MelonPrefManager.Il2Cpp\</OutputPath>
-        <DefineConstants>CPP</DefineConstants>
-        <AssemblyName>MelonPrefManager.IL2CPP</AssemblyName>
+
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <ItemGroup Condition="'$(Configuration)'=='ML_Cpp_net6' or '$(Configuration)'=='ML_Cpp_net472'">
+            <Exec Command="dotnet build ..\UniverseLib\src\UniverseLib.sln -c Release_IL2CPP_Unhollower" />
+        </ItemGroup>
+        <ItemGroup Condition="'$(Configuration)'=='ML_Cpp_CoreCLR'">
+            <Exec Command="dotnet build ..\UniverseLib\src\UniverseLib.sln -c Release_IL2CPP_Interop_ML" />
+        </ItemGroup>
+        <ItemGroup Condition="'$(Configuration)'=='ML_Mono'">
+            <Exec Command="dotnet build ..\UniverseLib\src\UniverseLib.sln -c Release_Mono" />
+        </ItemGroup>
+    </Target>
+
+    <!-- ~~~~~ CONFIGURATIONS ~~~~~ -->
+    <!-- ML IL2CPP Unhollower net6 -->
+    <PropertyGroup Condition="'$(Configuration)'=='ML_Cpp_net6'">
+        <TargetFramework>net6</TargetFramework>
+        <OutputPath>..\Release\MelonPrefManager.MelonLoader.IL2CPP.net6preview\</OutputPath>
+        <DefineConstants>CPP,ML,UNHOLLOWER</DefineConstants>
+        <AssemblyName>MelonPrefManager.ML.IL2CPP.net6preview</AssemblyName>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release_Mono' ">
-        <OutputPath>..\Release\MelonPrefManager.Mono\</OutputPath>
-        <DefineConstants>MONO</DefineConstants>
-        <AssemblyName>MelonPrefManager.Mono</AssemblyName>
+    <!-- ML IL2CPP net472 (TEMP) -->
+    <PropertyGroup Condition="'$(Configuration)'=='ML_Cpp_net472'">
+        <TargetFramework>net472</TargetFramework>
+        <OutputPath>..\Release\MelonPrefManager.MelonLoader.IL2CPP\</OutputPath>
+        <DefineConstants>CPP,ML,UNHOLLOWER</DefineConstants>
+        <AssemblyName>MelonPrefManager.ML.IL2CPP</AssemblyName>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_Mono|AnyCPU'">
-      <Optimize>True</Optimize>
-      <DebugType>embedded</DebugType>
+    <!-- ML IL2CPP CoreCLR -->
+    <PropertyGroup Condition="'$(Configuration)'=='ML_Cpp_CoreCLR'">
+        <TargetFramework>net6</TargetFramework>
+        <OutputPath>..\Release\MelonPrefManager.MelonLoader.IL2CPP.CoreCLR\</OutputPath>
+        <DefineConstants>CPP,ML,INTEROP</DefineConstants>
+        <AssemblyName>MelonPrefManager.ML.IL2CPP.CoreCLR</AssemblyName>
     </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IL2CPP|AnyCPU'">
-      <Optimize>True</Optimize>
-      <DebugType>embedded</DebugType>
+    <!-- ML MONO -->
+    <PropertyGroup Condition="'$(Configuration)'=='ML_Mono'">
+        <TargetFramework>net35</TargetFramework>
+        <OutputPath>..\Release\MelonPrefManager.MelonLoader.Mono\</OutputPath>
+        <DefineConstants>MONO,ML</DefineConstants>
+        <AssemblyName>MelonPrefManager.ML.Mono</AssemblyName>
     </PropertyGroup>
+
+    <!-- ~~~~~ NUGET ~~~~~ -->
     <ItemGroup>
         <PackageReference Include="LavaGang.MelonLoader" Version="0.6.1" />
-        <PackageReference Include="UniverseLib.Analyzers" Version="1.0.4">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
+        <PackageReference Include="Samboy063.Tomlet" Version="3.1.3" />
+        <!-- <PackageReference Include="UniverseLib.Analyzers" Version="1.0.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference> -->
     </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_Mono'">
-        <PackageReference Include="UniverseLib.Mono" Version="1.5.1" />
+
+    <!-- il2cpp Unhollower nuget -->
+    <ItemGroup
+        Condition="'$(Configuration)'=='ML_Cpp_net6' or '$(Configuration)'=='ML_Cpp_net472'">
+        <PackageReference Include="Il2CppAssemblyUnhollower.BaseLib" Version="0.4.22" />
+        <Reference Include="UniverseLib">
+            <HintPath>..\UniverseLib\Release\UniverseLib.Il2Cpp.Unhollower\UniverseLib.IL2CPP.Unhollower.dll</HintPath>
+            <Private>True</Private>
+        </Reference>
+    </ItemGroup>
+
+    <!-- il2cpp Interop nuget -->
+    <ItemGroup
+        Condition="'$(Configuration)'=='ML_Cpp_CoreCLR'">
+        <PackageReference Include="Il2CppInterop.Common" Version="1.0.0" />
+        <PackageReference Include="Il2CppInterop.Runtime" Version="1.0.0" />
+    </ItemGroup>
+
+    <!-- ML il2cpp Interop -->
+    <ItemGroup Condition="'$(Configuration)'=='ML_Cpp_CoreCLR'">
+        <Reference Include="UniverseLib">
+            <HintPath>..\UniverseLib\Release\UniverseLib.Il2Cpp.Interop\UniverseLib.ML.IL2CPP.Interop.dll</HintPath>
+            <Private>True</Private>
+        </Reference>
+    </ItemGroup>
+
+    <!-- mono nuget -->
+    <ItemGroup
+        Condition="'$(Configuration)'=='ML_Mono'">
+        <Reference Include="UniverseLib">
+            <HintPath>..\UniverseLib\Release\UniverseLib.Mono\UniverseLib.Mono.dll</HintPath>
+            <Private>True</Private>
+        </Reference>
+    </ItemGroup>
+
+    <!-- ~~~~~ ASSEMBLY REFERENCES ~~~~~ -->
+    <!-- MelonLoader net6 -->
+    <ItemGroup Condition="'$(Configuration)'=='ML_Cpp_net6' or '$(Configuration)'=='ML_Cpp_CoreCLR'">
+        <Reference Include="MelonLoader">
+            <HintPath>..\UnityExplorer\lib\net6\MelonLoader.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+    <!-- MelonLoader net35 -->
+    <ItemGroup Condition="'$(Configuration)'=='ML_Mono' or '$(Configuration)'=='ML_Cpp_net472'">
+        <Reference Include="MelonLoader">
+            <HintPath>..\UnityExplorer\lib\net35\MelonLoader.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
+    <!-- Mono -->
+    <ItemGroup Condition="'$(Configuration)'=='ML_Mono'">
         <Reference Include="UnityEngine">
-            <HintPath>..\lib\mono\UnityEngine.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\net35\UnityEngine.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.UI">
-            <HintPath>..\lib\mono\UnityEngine.UI.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\net35\UnityEngine.UI.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>
-    <ItemGroup Condition="'$(Configuration)' == 'Release_IL2CPP'">
-        <PackageReference Include="UniverseLib.IL2CPP.Unhollower" Version="1.5.1" />
-        <Reference Include="UnhollowerBaseLib">
-            <HintPath>..\lib\UnhollowerBaseLib.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
+
+    <!-- Il2Cpp Unhollower -->
+    <ItemGroup
+        Condition="'$(Configuration)'=='ML_Cpp_net6' or '$(Configuration)'=='ML_Cpp_net472' or '$(Configuration)'=='STANDALONE_Cpp' or '$(Configuration)'=='BIE_Cpp'">
         <Reference Include="Il2Cppmscorlib">
-            <HintPath>..\lib\unhollowed\Il2Cppmscorlib.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\unhollowed\Il2Cppmscorlib.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="Il2CppSystem.Core">
-            <HintPath>..\lib\unhollowed\Il2CppSystem.Core.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\unhollowed\Il2CppSystem.Core.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine">
+            <HintPath>..\UnityExplorer\lib\unhollowed\UnityEngine.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AudioModule">
+            <HintPath>..\UnityExplorer\lib\unhollowed\UnityEngine.AudioModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.CoreModule">
-            <HintPath>..\lib\unhollowed\UnityEngine.CoreModule.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\unhollowed\UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.PhysicsModule">
+            <HintPath>..\UnityExplorer\lib\unhollowed\UnityEngine.PhysicsModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.TextRenderingModule">
-            <HintPath>..\lib\unhollowed\UnityEngine.TextRenderingModule.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\unhollowed\UnityEngine.TextRenderingModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.UI">
-            <HintPath>..\lib\unhollowed\UnityEngine.UI.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\unhollowed\UnityEngine.UI.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.UIModule">
-            <HintPath>..\lib\unhollowed\UnityEngine.UIModule.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\unhollowed\UnityEngine.UIModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.IMGUIModule">
-            <HintPath>..\lib\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
+            <HintPath>..\UnityExplorer\lib\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
             <Private>False</Private>
         </Reference>
     </ItemGroup>
-    <Target Name="DeleteFileIL2CPP" AfterTargets="Build" Condition="'$(Configuration)' == 'Release_IL2CPP'">
-        <Delete Files="$(TargetDir)MelonPrefManager.IL2CPP.pdb" />
-    </Target>
-    <Target Name="DeleteFileMono" AfterTargets="Build" Condition="'$(Configuration)' == 'Release_Mono'">
-        <Delete Files="$(TargetDir)MelonPrefManager.Mono.pdb" />
-    </Target>
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="copy &quot;$(TargetPath)&quot; &quot;D:\OneDrive\Games\Storm Chasers\Mods\$(TargetName)$(TargetExt)&quot;" />
-    </Target>
+    <!-- Il2Cpp Interop -->
+    <ItemGroup
+        Condition="'$(Configuration)'=='ML_Cpp_CoreCLR'">
+        <Reference Include="Il2Cppmscorlib">
+            <HintPath>..\UnityExplorer\lib\interop\Il2Cppmscorlib.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="Il2CppSystem.Core">
+            <HintPath>..\UnityExplorer\lib\interop\Il2CppSystem.Core.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine">
+            <HintPath>..\UnityExplorer\lib\interop\UnityEngine.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.AudioModule">
+            <HintPath>..\UnityExplorer\lib\interop\UnityEngine.AudioModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>..\UnityExplorer\lib\interop\UnityEngine.CoreModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.PhysicsModule">
+            <HintPath>..\UnityExplorer\lib\interop\UnityEngine.PhysicsModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.TextRenderingModule">
+            <HintPath>..\UnityExplorer\lib\interop\UnityEngine.TextRenderingModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UI">
+            <HintPath>..\UnityExplorer\lib\interop\UnityEngine.UI.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.UIModule">
+            <HintPath>..\UnityExplorer\lib\interop\UnityEngine.UIModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+        <Reference Include="UnityEngine.IMGUIModule">
+            <HintPath>..\UnityExplorer\lib\interop\UnityEngine.IMGUIModule.dll</HintPath>
+            <Private>False</Private>
+        </Reference>
+    </ItemGroup>
 </Project>

@@ -1,0 +1,53 @@
+name: Build UnityExplorer
+
+# Controls when the action will run.
+on:
+  push:
+    branches: [master]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    if: "!contains(github.event.head_commit.message, '-noci')"
+
+    steps:
+      # Setup
+
+      - name: Checkout latest
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '6.x'
+      # Run build script
+      - name: Build MPM
+        run: ./build.ps1
+
+      #  Upload artifacts
+      - name: Upload MelonLoader.IL2CPP
+        uses: actions/upload-artifact@v4
+        with:
+          name: MelonPrefManager.MelonLoader.IL2CPP
+          path: ./Release/MelonPrefManager.MelonLoader.IL2CPP/
+
+      - name: Upload MelonLoader.IL2CPP.net6preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: MelonPrefManager.MelonLoader.IL2CPP.net6preview
+          path: ./Release/MelonPrefManager.MelonLoader.IL2CPP.net6preview/
+
+      - name: Upload MelonLoader.IL2CPP.CoreCLR
+        uses: actions/upload-artifact@v4
+        with:
+          name: MelonPrefManager.MelonLoader.IL2CPP.CoreCLR
+          path: ./Release/MelonPrefManager.MelonLoader.IL2CPP.CoreCLR/
+
+      - name: Upload MelonLoader.Mono
+        uses: actions/upload-artifact@v4
+        with:
+          name: MelonPrefManager.MelonLoader.Mono
+          path: ./Release/MelonPrefManager.MelonLoader.Mono/

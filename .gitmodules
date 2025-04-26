@@ -1,0 +1,6 @@
+[submodule "UniverseLib"]
+	path = UniverseLib
+	url = git@github.com:yukieiji/UniverseLib.git
+[submodule "UnityExplorer"]
+	path = UnityExplorer
+	url = git@github.com:yukieiji/UnityExplorer.git
