@@ -1,23 +1,31 @@
 # MelonPreferencesManager
 
+<p align="center">
 In-game UI for managing MelonLoader Mod Preferences. Supports IL2CPP and Mono Unity games.
-
+</p>
+<p align="center">
 Requires MelonLoader v0.5+
+</p>
+<p align="center">
+  ✨ Powered by <a href="https://github.com/yukieiji/UniverseLib">UniverseLib</a><br>
+  🛠️ This is fork of <a href="https://github.com/kafeijao/MelonPreferencesManager">MelonPreferencesManager</a> maintained by tschrock<br>
+</p>
+# Releases  [![](https://img.shields.io/github/downloads/sinai-dev/MelonPreferencesManager/total.svg)](../../releases)
 
-✨ Powered by [UniverseLib](https://github.com/sinai-dev/UniverseLib)
+[![](https://img.shields.io/github/release/tschrock/MelonPreferencesManager.svg?label=version)](../../releases/latest) [![](https://img.shields.io/github/workflow/status/tschrock/MelonPreferencesManager/Build%20MelonPreferencesManager)](https://github.com/tschrock/MelonPreferencesManager/actions) [![](https://img.shields.io/github/downloads/tschrock/MelonPreferencesManager/latest/total.svg)](../../releases/latest)
 
-## Releases [![](https://img.shields.io/github/release/sinai-dev/MelonPreferencesManager.svg?label=release%20notes)](../../releases/latest)
-
-* [Download (IL2CPP)](https://github.com/sinai-dev/MelonPreferencesManager/releases/latest/download/MelonPrefManager.IL2CPP.zip)
-* [Download (Mono)](https://github.com/sinai-dev/MelonPreferencesManager/releases/latest/download/MelonPrefManager.Mono.zip)
 
 ## How to use
 
-* Put the DLLs in your `Mods` folder.
-* Start the game and press `F5` to open the Menu.
-* You can change the keybinding under the `MelonPreferencesManager` category in the Menu, or by editing the file `UserData\MelonPreferences.cfg`.
+| Release | IL2CPP | Mono |
+| ------- | ------ | ---- |
+| ML 0.6+  | ✅ [link](https://github.com/tschrock/MelonPreferencesManager/releases/latest/download/MelonPreferencesManager.MelonLoader.IL2CPP.CoreCLR.zip) | ✖️ |
+| ML 0.6(**ONLY 0.6 ALPHA BUILD, NOT BETA**)  | ✅ [link](https://github.com/tschrock/MelonPreferencesManager/releases/latest/download/MelonPreferencesManager.MelonLoader.IL2CPP.net6preview.zip) | ✖️ |
+| ML 0.5  | ✅ [link](https://github.com/tschrock/MelonPreferencesManager/releases/latest/download/MelonPreferencesManager.MelonLoader.IL2CPP.zip) | ✅ [link](https://github.com/tschrock/MelonPreferencesManager/releases/latest/download/MelonPreferencesManager.MelonLoader.Mono.zip) | 
 
-[![](img/preview.png)](https://raw.githubusercontent.com/sinai-dev/MelonPreferencesManager/master/img/preview.png)
+1. Unzip the release file into a folder
+2. Copy the DLL inside the `Mods` folder into your MelonLoader `Mods` folder
+3. Copy all of the DLLs inside the `UserLibs` folder into your MelonLoader `UserLibs` folder
 
 ## Common issues and solutions
 
@@ -72,3 +80,9 @@ public class MyMod : MelonLoader.MelonMod
     }
 }
 ```
+
+# Building
+
+1. Run the `build.ps1` powershell script to build UnityExplorer. Releases are found in the `Release` folder.
+
+Building individual configurations from your IDE is fine, though note that the intial build process builds into `Release/<version>/...` instead of the subfolders that the powershell script uses. Batch building is not currently supported with the project.
